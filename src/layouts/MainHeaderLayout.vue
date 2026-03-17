@@ -25,21 +25,7 @@ const compactNavLinks = computed(() => props.navLinks.slice(0, 2))
   <header class="main-header">
     <div class="main-header__shell">
       <div class="main-header__left">
-        <button 
-          type="button"
-          class="main-header__burger xl:hidden"
-          :aria-expanded="mobileMenuOpen ? 'true' : 'false'"
-          aria-controls="site-mobile-nav"
-          :aria-label="mobileMenuOpen ? 'Закрыть меню' : 'Открыть меню'"
-          @click="toggleMobileMenu"
-        >
-          <svg v-if="!mobileMenuOpen" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.9">
-            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
-          </svg>
-          <svg v-else viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.9">
-            <path d="M6 6l12 12M18 6l-12 12" stroke-linecap="round" />
-          </svg>
-        </button>
+
 
         <a href="#hero" class="main-header__brand" @click="closeMobileMenu">
           <span class="main-header__logo" aria-hidden="true">
@@ -77,13 +63,7 @@ const compactNavLinks = computed(() => props.navLinks.slice(0, 2))
       </nav>
 
       <div class="main-header__right">
-        <label class="main-header__search hidden 2xl:flex" aria-label="Поиск">
-          <svg viewBox="0 0 24 24" class="h-4 w-4 text-[#a6b5ca]" fill="none" stroke="currentColor" stroke-width="1.8">
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="m20 20-3.3-3.3" stroke-linecap="round"></path>
-          </svg>
-          <input type="search" class="main-header__search-input" placeholder="Поиск" />
-        </label>
+
 
         <a href="#contacts" class="main-header__cta hidden sm:inline-flex">Получить консультацию</a>
 
