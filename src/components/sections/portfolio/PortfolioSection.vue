@@ -8,11 +8,8 @@ let observer
 
 const filters = [
   { id: 'all', label: 'Все проекты' },
-  { id: 'private', label: 'Частные дома' },
-  { id: 'commercial', label: 'Коммерческие объекты' },
-  { id: 'slope', label: 'Сложный рельеф' },
-  { id: 'reconstruction', label: 'Реконструкция' },
-  { id: 'premium', label: 'Премиум-сегмент' },
+  { id: 'private', label: 'Частные' },
+  { id: 'commercial', label: 'Коммерческие' },
 ]
 
 const cases = [
@@ -26,7 +23,7 @@ const cases = [
     result: 'Сформирована каскадная структура планировок, сохранена приватность и сокращены риски переработок на площадке.',
     preview: 'Сложный рельеф',
     image: '/images/case-01.jpg',
-    categories: ['private', 'slope', 'premium'],
+    categories: ['private', 'premium'],
   },
   {
     id: 'case-02',
@@ -74,7 +71,7 @@ const cases = [
     result: 'Объект получил новую функциональную модель с сохранением ключевой идентичности и управляемой стоимостью реализации.',
     preview: 'Адаптация объекта',
     image: '/images/case-05.jpg',
-    categories: ['reconstruction', 'commercial'],
+    categories: ['commercial'],
   },
   {
     id: 'case-06',
@@ -110,17 +107,14 @@ const cases = [
     result: 'Согласованы решения по фундаменту, инженерии и объемно-пространственной схеме без потери визуального качества проекта.',
     preview: 'Сложные условия',
     image: '/images/case-08.jpg',
-    categories: ['private', 'slope'],
+    categories: ['private'],
   },
 ]
 
 const activeCaseId = ref(cases[0].id)
 
 const filteredCases = computed(() => {
-  if (activeFilter.value === 'all') {
-    return cases
-  }
-
+  if (activeFilter.value === 'all') return cases
   return cases.filter((item) => item.categories.includes(activeFilter.value))
 })
 
@@ -129,17 +123,13 @@ const activeCase = computed(() => {
   return found ?? filteredCases.value[0] ?? cases[0]
 })
 
-const secondaryCases = computed(() => filteredCases.value.filter((item) => item.id !== activeCase.value.id))
-
-const caseIndex = computed(() => filteredCases.value.findIndex((item) => item.id === activeCase.value.id) + 1)
-const caseCount = computed(() => filteredCases.value.length)
-const caseProgress = computed(() => {
-  if (!caseCount.value) return 0
-  return (caseIndex.value / caseCount.value) * 100
+const secondaryCases = computed(() => {
+  return filteredCases.value.filter((item) => item.id !== activeCase.value.id)
 })
 
 watch(filteredCases, (list) => {
   if (!list.length) return
+
   if (!list.some((item) => item.id === activeCaseId.value)) {
     activeCaseId.value = list[0].id
   }
@@ -153,15 +143,12 @@ const selectCase = (caseId) => {
   activeCaseId.value = caseId
 }
 
-const resetFilters = () => {
-  activeFilter.value = 'all'
-}
-
 onMounted(() => {
   observer = new IntersectionObserver(
     (entries) => {
       const [entry] = entries
       if (!entry) return
+
       if (entry.isIntersecting) {
         isVisible.value = true
         observer?.disconnect()
@@ -194,11 +181,10 @@ onBeforeUnmount(() => {
       <div class="portfolio__intro">
         <span class="portfolio__eyebrow portfolio-reveal portfolio-reveal--eyebrow">Портфолио и кейсы</span>
         <h2 id="portfolio-title" class="portfolio__title portfolio-reveal portfolio-reveal--title">
-          Показываем не только визуал, но и <span>ограничения, задачу и результат</span>
+          Реализованные <span>проекты</span>
         </h2>
         <p class="portfolio__lead portfolio-reveal portfolio-reveal--lead">
-          В кейсах фиксируем не только образ объекта, но и контекст: что нужно было решить, какие ограничения были на входе и
-          какой результат получился в реализации.
+          Подборка объектов с разным масштабом, типом и задачами.
         </p>
       </div>
 
@@ -218,31 +204,26 @@ onBeforeUnmount(() => {
 
       <div class="portfolio-showcase">
         <article class="portfolio-featured portfolio-reveal portfolio-reveal--featured">
-          <transition name="case-fade" mode="out-in">
-            <img
-              :key="`${activeCase.id}-image`"
-              :src="activeCase.image"
-              :alt="activeCase.title"
-              class="portfolio-featured__image"
-            />
-          </transition>
+          <div class="portfolio-featured__media">
+            <transition name="case-fade" mode="out-in">
+              <img
+                :key="`${activeCase.id}-image`"
+                :src="activeCase.image"
+                :alt="activeCase.title"
+                class="portfolio-featured__image"
+              />
+            </transition>
 
-          <div class="portfolio-featured__overlay"></div>
+            <div class="portfolio-featured__overlay"></div>
 
-          <div class="portfolio-featured__meta">
-            <span class="portfolio-featured__pill">{{ activeCase.objectType }}</span>
-            <span class="portfolio-featured__pill">{{ activeCase.area }}</span>
-            <span class="portfolio-featured__pill">{{ activeCase.duration }}</span>
-          </div>
-
-          <div class="portfolio-counter-rail" aria-live="polite">
-            <p class="portfolio-counter-rail__value">{{ caseIndex }} / {{ caseCount }}</p>
-            <div class="portfolio-counter-rail__track" aria-hidden="true">
-              <span class="portfolio-counter-rail__progress" :style="{ width: `${caseProgress}%` }"></span>
+            <div class="portfolio-featured__meta">
+              <span class="portfolio-featured__pill">{{ activeCase.objectType }}</span>
+              <span class="portfolio-featured__pill">{{ activeCase.area }}</span>
+              <span class="portfolio-featured__pill">{{ activeCase.duration }}</span>
             </div>
           </div>
 
-          <div class="portfolio-featured__info">
+          <div class="portfolio-featured__content">
             <h3 class="portfolio-featured__title">{{ activeCase.title }}</h3>
 
             <div class="portfolio-featured__detail">
@@ -265,50 +246,31 @@ onBeforeUnmount(() => {
         </article>
 
         <div class="portfolio-secondary portfolio-reveal portfolio-reveal--secondary">
-          <article
-            v-for="item in secondaryCases"
-            :key="item.id"
-            class="portfolio-secondary-card"
-            @click="selectCase(item.id)"
-          >
-            <div class="portfolio-secondary-card__thumb-wrap">
-              <img :src="item.image" :alt="item.title" class="portfolio-secondary-card__thumb" />
-            </div>
+          <div class="portfolio-secondary__scroll">
+            <article
+              v-for="item in secondaryCases"
+              :key="item.id"
+              class="portfolio-secondary-card"
+              :class="{ active: item.id === activeCase.id }"
+              @click="selectCase(item.id)"
+            >
+              <div class="portfolio-secondary-card__thumb-wrap">
+                <img :src="item.image" :alt="item.title" class="portfolio-secondary-card__thumb" />
+              </div>
 
-            <div class="portfolio-secondary-card__content">
-              <p class="portfolio-secondary-card__meta">{{ item.objectType }} • {{ item.area }}</p>
-              <h3 class="portfolio-secondary-card__title">{{ item.title }}</h3>
-              <p class="portfolio-secondary-card__preview">{{ item.preview }}</p>
-            </div>
+              <div class="portfolio-secondary-card__content">
+                <p class="portfolio-secondary-card__meta">{{ item.objectType }} • {{ item.area }}</p>
+                <h3 class="portfolio-secondary-card__title">{{ item.title }}</h3>
+                <p class="portfolio-secondary-card__preview">{{ item.preview }}</p>
+              </div>
 
-            <span class="portfolio-secondary-card__arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </span>
-          </article>
-        </div>
-      </div>
-
-      <div class="portfolio__footer portfolio-reveal portfolio-reveal--footer">
-        <button type="button" class="portfolio__all" @click="resetFilters">
-          <span>Показать все {{ cases.length }} кейсов</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-            <path d="M4 12h16M12 4v16" stroke-linecap="round" />
-          </svg>
-        </button>
-
-        <div class="portfolio__summary">
-          <p class="portfolio__summary-text">
-            Каждый проект показываем через задачу, ограничения и итог реализации, чтобы вы видели не только визуальный образ, но
-            и логику принятия решений.
-          </p>
-          <a href="#process" class="portfolio__process-cta">
-            <span>Как строится работа по этапам</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </a>
+              <span class="portfolio-secondary-card__arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </article>
+          </div>
         </div>
       </div>
     </div>
@@ -320,7 +282,7 @@ onBeforeUnmount(() => {
   position: relative;
   isolation: isolate;
   overflow: clip;
-  padding: 120px 32px;
+  padding: 96px 32px;
   background:
     radial-gradient(circle at 52% 22%, rgba(201, 169, 110, 0.05), transparent 30%),
     radial-gradient(circle at 82% 88%, rgba(0, 196, 180, 0.035), transparent 34%),
@@ -346,7 +308,7 @@ onBeforeUnmount(() => {
 }
 
 .portfolio__intro {
-  max-width: 860px;
+  max-width: 720px;
 }
 
 .portfolio__eyebrow {
@@ -366,11 +328,11 @@ onBeforeUnmount(() => {
 }
 
 .portfolio__title {
-  margin: 20px 0 0;
-  max-width: 980px;
+  margin: 16px 0 0;
+  max-width: 680px;
   font-family: 'Montserrat', 'Manrope', sans-serif;
-  font-size: clamp(2.65rem, 5vw, 4rem);
-  line-height: 1.03;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.08;
   letter-spacing: -0.02em;
   font-weight: 760;
   color: #e0e0e0;
@@ -382,15 +344,15 @@ onBeforeUnmount(() => {
 }
 
 .portfolio__lead {
-  margin: 26px 0 0;
-  max-width: 820px;
-  font-size: clamp(18px, 1.45vw, 20px);
-  line-height: 1.65;
+  margin: 16px 0 0;
+  max-width: 620px;
+  font-size: 16px;
+  line-height: 1.6;
   color: #a7b0c1;
 }
 
 .portfolio__filters {
-  margin-top: 30px;
+  margin-top: 26px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -426,19 +388,33 @@ onBeforeUnmount(() => {
 }
 
 .portfolio-showcase {
-  margin-top: 30px;
+  margin-top: 28px;
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.85fr);
+  grid-template-columns: minmax(0, 1.42fr) minmax(320px, 0.82fr);
   gap: 20px;
+  align-items: stretch;
+}
+
+.portfolio-featured,
+.portfolio-secondary {
+  height: 760px;
 }
 
 .portfolio-featured {
-  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   overflow: hidden;
   border-radius: 32px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  min-height: clamp(640px, 74vh, 760px);
+  background: linear-gradient(180deg, rgba(17, 28, 51, 0.82), rgba(22, 35, 61, 0.96));
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.32);
+  min-height: 0;
+}
+
+.portfolio-featured__media {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .portfolio-featured__image {
@@ -447,14 +423,14 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.78) saturate(0.9) contrast(1.04);
+  filter: brightness(0.8) saturate(0.92) contrast(1.03);
 }
 
 .portfolio-featured__overlay {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(6, 16, 29, 0.2) 0%, rgba(7, 19, 34, 0.35) 48%, rgba(7, 19, 34, 0.9) 100%),
+    linear-gradient(180deg, rgba(6, 16, 29, 0.18) 0%, rgba(7, 19, 34, 0.24) 100%),
     radial-gradient(circle at 72% 18%, rgba(201, 169, 110, 0.12), transparent 44%);
 }
 
@@ -462,6 +438,7 @@ onBeforeUnmount(() => {
   position: absolute;
   top: 22px;
   left: 22px;
+  right: 22px;
   z-index: 2;
   display: flex;
   flex-wrap: wrap;
@@ -478,59 +455,17 @@ onBeforeUnmount(() => {
   color: #e0e0e0;
 }
 
-.portfolio-counter-rail {
-  position: absolute;
-  top: 22px;
-  right: 22px;
-  z-index: 2;
-  width: 120px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(8, 19, 33, 0.5);
-  padding: 8px 10px;
-}
-
-.portfolio-counter-rail__value {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(224, 224, 224, 0.94);
-}
-
-.portfolio-counter-rail__track {
-  margin-top: 7px;
-  width: 100%;
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  overflow: hidden;
-}
-
-.portfolio-counter-rail__progress {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #c9a96e 0%, #00c4b4 100%);
-}
-
-.portfolio-featured__info {
-  position: absolute;
-  right: 22px;
-  bottom: 22px;
-  left: 22px;
-  z-index: 2;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(20, 30, 50, 0.45);
-  backdrop-filter: blur(14px);
-  padding: 24px 26px;
+.portfolio-featured__content {
+  padding: 24px 26px 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(17, 28, 51, 0.88), rgba(22, 35, 61, 0.96));
 }
 
 .portfolio-featured__title {
   margin: 0;
-  max-width: 760px;
-  font-size: clamp(1.75rem, 2.6vw, 2.15rem);
-  line-height: 1.14;
+  font-size: clamp(1.45rem, 2vw, 1.95rem);
+  line-height: 1.16;
   font-weight: 720;
   color: #e0e0e0;
   text-wrap: balance;
@@ -543,7 +478,7 @@ onBeforeUnmount(() => {
 .portfolio-featured__detail-label {
   display: inline-flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 600;
@@ -555,14 +490,14 @@ onBeforeUnmount(() => {
 }
 
 .portfolio-featured__detail p {
-  margin: 8px 0 0;
-  font-size: 15px;
-  line-height: 1.62;
+  margin: 7px 0 0;
+  font-size: 14px;
+  line-height: 1.58;
   color: #a7b0c1;
 }
 
 .portfolio-featured__cta {
-  margin-top: 16px;
+  margin-top: 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -598,180 +533,86 @@ onBeforeUnmount(() => {
 }
 
 .portfolio-secondary {
-  display: grid;
-  gap: 12px;
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 28, 51, 0.68);
+  overflow: hidden;
+  min-height: 0;
+  transform: translateZ(0);
 }
 
+.portfolio-secondary__scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  transform: translateZ(0);
+
+  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;  /* IE / old Edge */
+}
+
+.portfolio-secondary__scroll::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}
 .portfolio-secondary-card {
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(22, 35, 61, 0.76);
   padding: 12px;
   display: grid;
-  grid-template-columns: 132px minmax(0, 1fr) 22px;
+  grid-template-columns: 120px minmax(0, 1fr) 22px;
   gap: 12px;
   align-items: center;
-  min-height: 188px;
+  min-height: 156px;
   cursor: pointer;
-  transition:
-    border-color 260ms ease,
-    transform 260ms ease,
-    background-color 260ms ease;
+
+  /* было слишком тяжело */
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+
+  /* изоляция от перерисовок соседей */
+  contain: layout paint;
 }
 
 .portfolio-secondary-card:hover {
   border-color: rgba(201, 169, 110, 0.24);
-  transform: translateY(-3px);
   background: rgba(22, 35, 61, 0.86);
+  transform: none;
 }
 
 .portfolio-secondary-card__thumb-wrap {
   height: 100%;
-  min-height: 160px;
+  min-height: 132px;
   border-radius: 16px;
   overflow: hidden;
+  transform: translateZ(0);
 }
 
 .portfolio-secondary-card__thumb {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 280ms ease;
+
+  /* убираем анимацию масштаба */
+  transition: none;
+  transform: translateZ(0);
 }
 
 .portfolio-secondary-card:hover .portfolio-secondary-card__thumb {
-  transform: scale(1.03);
-}
-
-.portfolio-secondary-card__meta {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.3;
-  color: rgba(201, 169, 110, 0.9);
-}
-
-.portfolio-secondary-card__title {
-  margin: 10px 0 0;
-  font-size: 20px;
-  line-height: 1.24;
-  font-weight: 650;
-  color: #e0e0e0;
-  text-wrap: balance;
-}
-
-.portfolio-secondary-card__preview {
-  margin: 10px 0 0;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #a7b0c1;
-}
-
-.portfolio-secondary-card__arrow {
-  color: #c9a96e;
+  transform: none;
 }
 
 .portfolio-secondary-card__arrow svg {
   width: 16px;
   height: 16px;
-  transition: transform 240ms ease;
+  transition: none;
 }
 
 .portfolio-secondary-card:hover .portfolio-secondary-card__arrow svg {
-  transform: translateX(4px);
-}
-
-.portfolio-secondary-card:nth-child(n + 4) {
-  display: none;
-}
-
-.portfolio__footer {
-  margin-top: 24px;
-  display: grid;
-  gap: 16px;
-}
-
-.portfolio__all {
-  align-self: start;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 44px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(22, 35, 61, 0.74);
-  padding: 0 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #e0e0e0;
-  transition:
-    border-color 240ms ease,
-    background-color 240ms ease,
-    color 240ms ease;
-}
-
-.portfolio__all:hover {
-  border-color: rgba(255, 255, 255, 0.24);
-  background: rgba(22, 35, 61, 0.9);
-}
-
-.portfolio__all svg {
-  width: 16px;
-  height: 16px;
-}
-
-.portfolio__summary {
-  border-radius: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(17, 28, 51, 0.72), rgba(22, 35, 61, 0.88));
-  padding: 24px 26px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 18px;
-  align-items: center;
-}
-
-.portfolio__summary-text {
-  margin: 0;
-  max-width: 760px;
-  font-size: 16px;
-  line-height: 1.62;
-  color: #a7b0c1;
-}
-
-.portfolio__process-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 44px;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 196, 180, 0.24);
-  background: rgba(0, 196, 180, 0.12);
-  padding: 0 16px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #e0e0e0;
-  transition:
-    border-color 240ms ease,
-    background-color 240ms ease,
-    box-shadow 240ms ease;
-}
-
-.portfolio__process-cta svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 240ms ease;
-}
-
-.portfolio__process-cta:hover {
-  border-color: rgba(0, 196, 180, 0.4);
-  background: rgba(0, 196, 180, 0.2);
-  box-shadow: 0 0 18px rgba(0, 196, 180, 0.14);
-}
-
-.portfolio__process-cta:hover svg {
-  transform: translateX(4px);
+  transform: none;
 }
 
 .case-fade-enter-active,
@@ -801,23 +642,19 @@ onBeforeUnmount(() => {
 }
 
 .portfolio-reveal--lead {
-  transition-delay: 170ms;
+  transition-delay: 160ms;
 }
 
 .portfolio-reveal--filters {
-  transition-delay: 240ms;
+  transition-delay: 220ms;
 }
 
 .portfolio-reveal--featured {
-  transition-delay: 320ms;
+  transition-delay: 300ms;
 }
 
 .portfolio-reveal--secondary {
-  transition-delay: 420ms;
-}
-
-.portfolio-reveal--footer {
-  transition-delay: 620ms;
+  transition-delay: 400ms;
 }
 
 .portfolio-section.is-visible .portfolio-reveal {
@@ -830,17 +667,17 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr;
   }
 
+  .portfolio-featured,
   .portfolio-secondary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: auto;
   }
 
-  .portfolio-secondary-card {
-    min-height: 168px;
-    grid-template-columns: 114px minmax(0, 1fr) 18px;
+  .portfolio-featured {
+    min-height: 680px;
   }
 
-  .portfolio-secondary-card:nth-child(n + 4) {
-    display: grid;
+  .portfolio-secondary {
+    min-height: 520px;
   }
 }
 
@@ -850,19 +687,19 @@ onBeforeUnmount(() => {
   }
 
   .portfolio__title {
-    font-size: clamp(2rem, 8.8vw, 2.5rem);
-    line-height: 1.08;
+    font-size: clamp(1.8rem, 7vw, 2.35rem);
+    line-height: 1.1;
   }
 
   .portfolio__lead {
-    margin-top: 20px;
-    font-size: 16px;
-    line-height: 1.6;
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.58;
     max-width: 100%;
   }
 
   .portfolio__filters {
-    margin-top: 24px;
+    margin-top: 22px;
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 6px;
@@ -875,8 +712,12 @@ onBeforeUnmount(() => {
   }
 
   .portfolio-featured {
-    min-height: 500px;
+    min-height: 0;
     border-radius: 24px;
+  }
+
+  .portfolio-featured__media {
+    min-height: 300px;
   }
 
   .portfolio-featured__meta {
@@ -890,87 +731,55 @@ onBeforeUnmount(() => {
     font-size: 11px;
   }
 
-  .portfolio-counter-rail {
-    top: auto;
-    right: 12px;
-    bottom: 176px;
-    width: 108px;
-    padding: 7px 9px;
-  }
-
-  .portfolio-featured__info {
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
-    border-radius: 18px;
-    padding: 16px;
+  .portfolio-featured__content {
+    padding: 18px 16px 18px;
   }
 
   .portfolio-featured__title {
-    font-size: clamp(1.4rem, 5.6vw, 1.65rem);
+    font-size: clamp(1.28rem, 5vw, 1.6rem);
   }
 
   .portfolio-featured__detail {
-    margin-top: 10px;
+    margin-top: 12px;
   }
 
   .portfolio-featured__detail p {
     font-size: 14px;
-    line-height: 1.55;
+    line-height: 1.52;
   }
 
   .portfolio-featured__cta {
-    margin-top: 12px;
+    margin-top: 14px;
     width: 100%;
   }
 
   .portfolio-secondary {
-    grid-template-columns: 1fr;
+    min-height: 440px;
+    border-radius: 24px;
+  }
+
+  .portfolio-secondary__scroll {
+    padding: 12px;
     gap: 10px;
   }
 
   .portfolio-secondary-card {
-    min-height: 136px;
+    min-height: 132px;
     border-radius: 18px;
-    grid-template-columns: 98px minmax(0, 1fr) 16px;
+    grid-template-columns: 92px minmax(0, 1fr) 16px;
   }
 
   .portfolio-secondary-card__thumb-wrap {
-    min-height: 108px;
+    min-height: 104px;
     border-radius: 12px;
   }
 
   .portfolio-secondary-card__title {
-    font-size: 17px;
+    font-size: 15px;
   }
 
   .portfolio-secondary-card__preview {
     font-size: 13px;
-  }
-
-  .portfolio__footer {
-    margin-top: 18px;
-  }
-
-  .portfolio__all {
-    width: 100%;
-  }
-
-  .portfolio__summary {
-    border-radius: 20px;
-    padding: 18px;
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .portfolio__summary-text {
-    font-size: 15px;
-    line-height: 1.58;
-  }
-
-  .portfolio__process-cta {
-    width: 100%;
-    min-height: 50px;
   }
 
   .portfolio-reveal {
@@ -992,9 +801,6 @@ onBeforeUnmount(() => {
   .portfolio-secondary-card__thumb,
   .portfolio-featured__cta,
   .portfolio-featured__cta svg,
-  .portfolio__all,
-  .portfolio__process-cta,
-  .portfolio__process-cta svg,
   .case-fade-enter-active,
   .case-fade-leave-active {
     transition: none;

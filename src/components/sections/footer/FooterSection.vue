@@ -65,9 +65,9 @@ onBeforeUnmount(() => {
 
         <div class="footer__contacts">
           <p class="footer__heading">Контакты</p>
-          <a href="tel:+79384633003" class="footer__phone">+7 (938) 463-30-03</a>
-          <a href="mailto:info@stroyproject.ru" class="footer__email">info@stroyproject.ru</a>
-          <p class="footer__location">Сочи · дистанционно по России и СНГ</p>
+          <a href="tel:+79384633003" class="footer__phone">+7 (966) 772-22-80</a>
+          <a href="mailto:info@stroyproject.ru" class="footer__email">proekt@12393.ru</a>
+          <p class="footer__location">35400, Сочи, Советская 40, этаж 6</p>
         </div>
 
         <div class="footer__meta">
