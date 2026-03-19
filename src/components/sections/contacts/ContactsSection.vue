@@ -91,7 +91,7 @@ onBeforeUnmount(() => {
           <div class="contact-form__row contact-form__row--half">
             <label class="contact-form__field">
               <span class="contact-form__label">Тип объекта</span>
-              <select v-model="formState.objectType" class="contact-form__control" name="object-type" required>
+              <select v-model="formState.objectType" class="contact-form__control contact-form__control--select" name="object-type" required>
                 <option value="" disabled>Выберите вариант</option>
                 <option value="private-house">Частный дом</option>
                 <option value="villa">Вилла / резиденция</option>
@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
 
             <label class="contact-form__field">
               <span class="contact-form__label">Что важно получить в первую очередь</span>
-              <select v-model="formState.firstStep" class="contact-form__control" name="first-step" required>
+              <select v-model="formState.firstStep" class="contact-form__control contact-form__control--select" name="first-step" required>
                 <option value="" disabled>Выберите вариант</option>
                 <option value="budget">Ориентир по стоимости</option>
                 <option value="analysis">Разбор участка и ограничений</option>
@@ -308,6 +308,37 @@ onBeforeUnmount(() => {
     border-color 200ms ease,
     background-color 200ms ease,
     box-shadow 200ms ease;
+}
+
+.contact-form__control--select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 48px;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(224, 224, 224, 0.9) 50%),
+    linear-gradient(135deg, rgba(224, 224, 224, 0.9) 50%, transparent 50%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+  background-position:
+    calc(100% - 21px) calc(50% - 2px),
+    calc(100% - 15px) calc(50% - 2px),
+    calc(100% - 42px) 50%;
+  background-size: 6px 6px, 6px 6px, 1px 22px;
+  background-repeat: no-repeat;
+}
+
+.contact-form__control--select:invalid {
+  color: #a7b0c1;
+}
+
+.contact-form__control--select option {
+  color: #e0e0e0;
+  background: #16233d;
+}
+
+.contact-form__control--select option[value=''] {
+  color: #a7b0c1;
 }
 
 .contact-form__control::placeholder {

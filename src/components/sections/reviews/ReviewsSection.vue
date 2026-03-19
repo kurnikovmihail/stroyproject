@@ -8,6 +8,8 @@ let observer
 const featuredReview = {
   person: 'Анна и Максим',
   role: 'Частный дом на сложном рельефе',
+  image: '/images/review-person-01.png',
+  imageAlt: 'Анна и Максим, клиентский отзыв о частном доме',
   quote:
     '«Был страх, что красивую идею не получится построить без резкого роста бюджета. В итоге получили рабочий проект, по которому строители шли без постоянных уточнений и пересборки планировок»',
   resultTitle: 'Что особенно сработало',
@@ -18,6 +20,8 @@ const secondaryReviews = [
   {
     name: 'Алексей Р.',
     role: 'Бутик-отель',
+    image: '/images/review-person-02.png',
+    imageAlt: 'Алексей Р., отзыв по проектированию бутик-отеля',
     quote:
       '«Нужен был не просто красивый проект, а рабочая схема под бизнес-задачу. В результате получили понятную логику потоков, меньше спорных решений с подрядчиками и прогнозируемую эксплуатацию»',
     tags: ['коммерческая логика', 'оптимизация потоков'],
@@ -25,6 +29,8 @@ const secondaryReviews = [
   {
     name: 'Ирина К.',
     role: 'Реконструкция исторического здания',
+    image: '/images/review-person-03.png',
+    imageAlt: 'Ирина К., отзыв о реконструкции исторического здания',
     quote:
       '«Самый ценный результат — аккуратное совмещение нового функционала с характером существующего объекта. Проект оказался реалистичным и не разрушил сильные стороны здания»',
     tags: ['бережная реконструкция', 'адаптация без потери характера'],
@@ -77,18 +83,24 @@ onBeforeUnmount(() => {
       </div>
 
       <article class="reviews-featured reviews-reveal reviews-reveal--featured">
-        <div class="reviews-featured__person">
-          <p class="reviews-featured__label">Главная история</p>
-          <h3 class="reviews-featured__name">{{ featuredReview.person }}</h3>
-          <p class="reviews-featured__role">{{ featuredReview.role }}</p>
+        <div class="reviews-featured__media">
+          <img :src="featuredReview.image" :alt="featuredReview.imageAlt" loading="lazy" decoding="async" />
         </div>
 
-        <blockquote class="reviews-featured__quote">{{ featuredReview.quote }}</blockquote>
+        <div class="reviews-featured__content">
+          <div class="reviews-featured__person">
+            <p class="reviews-featured__label">Главная история</p>
+            <h3 class="reviews-featured__name">{{ featuredReview.person }}</h3>
+            <p class="reviews-featured__role">{{ featuredReview.role }}</p>
+          </div>
 
-        <div class="reviews-featured__result">
-          <p class="reviews-featured__result-title">{{ featuredReview.resultTitle }}</p>
-          <div class="reviews-featured__tags">
-            <span v-for="tag in featuredReview.tags" :key="tag" class="reviews-featured__tag">{{ tag }}</span>
+          <blockquote class="reviews-featured__quote">{{ featuredReview.quote }}</blockquote>
+
+          <div class="reviews-featured__result">
+            <p class="reviews-featured__result-title">{{ featuredReview.resultTitle }}</p>
+            <div class="reviews-featured__tags">
+              <span v-for="tag in featuredReview.tags" :key="tag" class="reviews-featured__tag">{{ tag }}</span>
+            </div>
           </div>
         </div>
       </article>
@@ -101,8 +113,13 @@ onBeforeUnmount(() => {
           :style="{ '--review-delay': `${420 + index * 90}ms` }"
         >
           <div class="review-card__head">
-            <h3 class="review-card__name">{{ review.name }}</h3>
-            <p class="review-card__role">{{ review.role }}</p>
+            <div class="review-card__avatar">
+              <img :src="review.image" :alt="review.imageAlt" loading="lazy" decoding="async" />
+            </div>
+            <div class="review-card__identity">
+              <h3 class="review-card__name">{{ review.name }}</h3>
+              <p class="review-card__role">{{ review.role }}</p>
+            </div>
           </div>
 
           <p class="review-card__quote">{{ review.quote }}</p>
@@ -211,6 +228,30 @@ onBeforeUnmount(() => {
   background: linear-gradient(180deg, rgba(22, 35, 61, 0.82), rgba(17, 28, 51, 0.94));
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
   padding: 34px 36px;
+  display: grid;
+  grid-template-columns: minmax(230px, 320px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.reviews-featured__media {
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 28, 51, 0.72);
+  min-height: 320px;
+}
+
+.reviews-featured__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.reviews-featured__content {
+  display: flex;
+  flex-direction: column;
 }
 
 .reviews-featured__person {
@@ -309,6 +350,8 @@ onBeforeUnmount(() => {
   background: rgba(22, 35, 61, 0.72);
   min-height: 244px;
   padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
   transition:
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -319,6 +362,28 @@ onBeforeUnmount(() => {
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.14);
   background: rgba(22, 35, 61, 0.82);
+}
+
+.review-card__head {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.review-card__avatar {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 28, 51, 0.72);
+  aspect-ratio: 1 / 1;
+}
+
+.review-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .review-card__name {
@@ -344,7 +409,8 @@ onBeforeUnmount(() => {
 }
 
 .review-card__tags {
-  margin-top: 14px;
+  margin-top: auto;
+  padding-top: 14px;
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
@@ -475,6 +541,13 @@ onBeforeUnmount(() => {
     margin-top: 22px;
     border-radius: 24px;
     padding: 24px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .reviews-featured__media {
+    min-height: 260px;
+    border-radius: 18px;
   }
 
   .reviews-featured__name {
@@ -510,6 +583,15 @@ onBeforeUnmount(() => {
     border-radius: 20px;
     min-height: 0;
     padding: 20px;
+  }
+
+  .review-card__head {
+    grid-template-columns: 70px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .review-card__avatar {
+    border-radius: 12px;
   }
 
   .review-card__name {

@@ -1,44 +1,11 @@
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useExpandTransition } from '../../../composables/useExpandTransition.js'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const sectionRef = ref(null)
-const accordionRef = ref(null)
 const isVisible = ref(false)
 const openItemId = ref('price')
 
 let observer
-
-const quickAnswers = [
-  {
-    id: 'quick-price',
-    label: 'Стоимость',
-    question: 'Сколько стоит проект?',
-    answer: 'Предварительный ориентир даём за 15–20 минут после короткого брифа по объекту.',
-    targetId: 'price',
-  },
-  {
-    id: 'quick-timeline',
-    label: 'Сроки',
-    question: 'Какие сроки проектирования?',
-    answer: 'Срок зависит от площади и состава, но этапы и контрольные точки фиксируем заранее.',
-    targetId: 'timeline',
-  },
-  {
-    id: 'quick-remote',
-    label: 'Формат работы',
-    question: 'Можно ли работать дистанционно?',
-    answer: 'Да. Работаем с проектами по всей России и СНГ в прозрачном удалённом формате.',
-    targetId: 'remote',
-  },
-  {
-    id: 'quick-slope',
-    label: 'Сложные участки',
-    question: 'Берёте сложные участки с уклоном?',
-    answer: 'Да, это одна из самых частых задач: уклон, УГВ, слабые грунты и ограничения.',
-    targetId: 'slope',
-  },
-]
 
 const faqItems = [
   {
@@ -85,22 +52,8 @@ const faqItems = [
   },
 ]
 
-const {
-  animateExpandEnter,
-  animateExpandAfterEnter,
-  animateExpandLeave,
-  animateExpandAfterLeave,
-} = useExpandTransition()
-
 const toggleItem = (id) => {
   openItemId.value = openItemId.value === id ? '' : id
-}
-
-const openFromQuick = async (targetId) => {
-  openItemId.value = targetId
-  await nextTick()
-  const targetNode = document.getElementById(`faq-item-${targetId}`)
-  targetNode?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
 }
 
 onMounted(() => {
@@ -146,27 +99,7 @@ onBeforeUnmount(() => {
         </p>
       </div>
 
-      <div class="faq-quick faq-reveal faq-reveal--quick">
-        <article
-          v-for="(card, index) in quickAnswers"
-          :key="card.id"
-          class="faq-quick-card"
-          :style="{ '--quick-delay': `${260 + index * 70}ms` }"
-        >
-          <p class="faq-quick-card__label">{{ card.label }}</p>
-          <h3 class="faq-quick-card__question">{{ card.question }}</h3>
-          <p class="faq-quick-card__answer">{{ card.answer }}</p>
-
-          <button type="button" class="faq-quick-card__more" @click="openFromQuick(card.targetId)">
-            <span>Подробнее</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
-        </article>
-      </div>
-
-      <div ref="accordionRef" class="faq-accordion faq-reveal faq-reveal--accordion">
+      <div class="faq-accordion faq-reveal faq-reveal--accordion">
         <article
           v-for="(item, index) in faqItems"
           :id="`faq-item-${item.id}`"
@@ -190,32 +123,18 @@ onBeforeUnmount(() => {
             </span>
           </button>
 
-          <transition
-            @enter="animateExpandEnter"
-            @after-enter="animateExpandAfterEnter"
-            @leave="animateExpandLeave"
-            @after-leave="animateExpandAfterLeave"
+          <div
+            :id="`faq-body-${item.id}`"
+            class="faq-item__content"
+            role="region"
+            :aria-hidden="openItemId === item.id ? 'false' : 'true'"
           >
-            <div v-if="openItemId === item.id" :id="`faq-body-${item.id}`" class="faq-item__body">
+            <div class="faq-item__body">
               <p class="faq-item__answer">{{ item.answer }}</p>
               <p class="faq-item__hint">{{ item.hint }}</p>
             </div>
-          </transition>
+          </div>
         </article>
-      </div>
-
-      <div class="faq-help faq-reveal faq-reveal--help">
-        <p class="faq-help__text">
-          Если не нашли свой вопрос в списке, разберём вашу задачу на короткой консультации и подскажем оптимальный формат
-          работы под объект.
-        </p>
-
-        <a href="#reviews" class="faq-help__cta">
-          <span>Посмотреть отзывы клиентов</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </a>
       </div>
     </div>
   </section>
@@ -295,82 +214,8 @@ onBeforeUnmount(() => {
   color: #a7b0c1;
 }
 
-.faq-quick {
-  margin-top: 30px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.faq-quick-card {
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(22, 35, 61, 0.7);
-  min-height: 168px;
-  padding: 22px 24px;
-  transition:
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 260ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.faq-quick-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(22, 35, 61, 0.82);
-}
-
-.faq-quick-card__label {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.2;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #c9a96e;
-}
-
-.faq-quick-card__question {
-  margin: 10px 0 0;
-  font-size: 22px;
-  line-height: 1.25;
-  font-weight: 650;
-  color: #e0e0e0;
-}
-
-.faq-quick-card__answer {
-  margin: 9px 0 0;
-  font-size: 15px;
-  line-height: 1.6;
-  color: #a7b0c1;
-}
-
-.faq-quick-card__more {
-  margin-top: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  font-size: 14px;
-  line-height: 1.3;
-  font-weight: 600;
-  color: #e0e0e0;
-}
-
-.faq-quick-card__more svg {
-  width: 15px;
-  height: 15px;
-  transition: transform 220ms ease;
-}
-
-.faq-quick-card__more:hover svg {
-  transform: translateX(3px);
-}
-
 .faq-accordion {
-  margin-top: 22px;
+  margin-top: 30px;
   display: grid;
   gap: 10px;
 }
@@ -443,8 +288,34 @@ onBeforeUnmount(() => {
   border-color: rgba(201, 169, 110, 0.3);
 }
 
+.faq-item__content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.faq-item.is-open .faq-item__content {
+  grid-template-rows: 1fr;
+}
+
 .faq-item__body {
-  padding: 0 24px 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 24px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 220ms ease,
+    transform 260ms ease,
+    padding-bottom 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.faq-item.is-open .faq-item__body {
+  padding-bottom: 24px;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .faq-item__answer {
@@ -455,7 +326,7 @@ onBeforeUnmount(() => {
 }
 
 .faq-item__hint {
-  margin: 12px 0 0;
+  margin: 0;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
@@ -463,60 +334,6 @@ onBeforeUnmount(() => {
   font-size: 13px;
   line-height: 1.5;
   color: rgba(224, 224, 224, 0.88);
-}
-
-.faq-help {
-  margin-top: 14px;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(17, 28, 51, 0.66);
-  padding: 18px 20px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-}
-
-.faq-help__text {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.58;
-  color: #a7b0c1;
-}
-
-.faq-help__cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 42px;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 196, 180, 0.24);
-  background: rgba(0, 196, 180, 0.1);
-  padding: 0 14px;
-  font-size: 13px;
-  font-weight: 620;
-  color: #e0e0e0;
-  transition:
-    border-color 220ms ease,
-    background-color 220ms ease,
-    box-shadow 220ms ease;
-}
-
-.faq-help__cta svg {
-  width: 15px;
-  height: 15px;
-  transition: transform 220ms ease;
-}
-
-.faq-help__cta:hover {
-  border-color: rgba(0, 196, 180, 0.38);
-  background: rgba(0, 196, 180, 0.16);
-  box-shadow: 0 0 16px rgba(0, 196, 180, 0.12);
-}
-
-.faq-help__cta:hover svg {
-  transform: translateX(3px);
 }
 
 .faq-reveal {
@@ -539,16 +356,8 @@ onBeforeUnmount(() => {
   transition-delay: 160ms;
 }
 
-.faq-reveal--quick {
-  transition-delay: 240ms;
-}
-
 .faq-reveal--accordion {
-  transition-delay: 320ms;
-}
-
-.faq-reveal--help {
-  transition-delay: 440ms;
+  transition-delay: 260ms;
 }
 
 .faq-section.is-visible .faq-reveal {
@@ -572,29 +381,8 @@ onBeforeUnmount(() => {
     line-height: 1.6;
   }
 
-  .faq-quick {
-    margin-top: 22px;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .faq-quick-card {
-    border-radius: 20px;
-    padding: 20px;
-    min-height: 0;
-  }
-
-  .faq-quick-card__question {
-    font-size: 20px;
-  }
-
-  .faq-quick-card__answer {
-    font-size: 14px;
-    line-height: 1.56;
-  }
-
   .faq-accordion {
-    margin-top: 12px;
+    margin-top: 22px;
   }
 
   .faq-item {
@@ -612,7 +400,12 @@ onBeforeUnmount(() => {
   }
 
   .faq-item__body {
-    padding: 0 18px 18px;
+    padding: 0 18px;
+    gap: 10px;
+  }
+
+  .faq-item.is-open .faq-item__body {
+    padding-bottom: 18px;
   }
 
   .faq-item__answer {
@@ -621,27 +414,8 @@ onBeforeUnmount(() => {
   }
 
   .faq-item__hint {
-    margin-top: 10px;
     font-size: 12px;
     padding: 9px 10px;
-  }
-
-  .faq-help {
-    margin-top: 10px;
-    border-radius: 18px;
-    padding: 16px;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .faq-help__text {
-    font-size: 14px;
-    line-height: 1.56;
-  }
-
-  .faq-help__cta {
-    width: 100%;
-    min-height: 48px;
   }
 
   .faq-reveal {
@@ -653,12 +427,10 @@ onBeforeUnmount(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .faq-reveal,
-  .faq-quick-card,
   .faq-item,
   .faq-item__icon,
-  .faq-help__cta,
-  .faq-help__cta svg,
-  .faq-quick-card__more svg {
+  .faq-item__content,
+  .faq-item__body {
     transition: none;
   }
 }
