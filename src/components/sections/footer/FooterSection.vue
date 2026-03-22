@@ -46,7 +46,9 @@ onBeforeUnmount(() => {
       <div class="footer__top footer-reveal footer-reveal--top">
         <div class="footer__brand">
           <a href="#hero" class="footer__brand-link">
-            <span class="footer__mark" aria-hidden="true">SP</span>
+            <span class="footer__mark" aria-hidden="true">
+              <img class="footer__mark-image" src="/images/logo.png" alt="" loading="lazy" decoding="async" />
+            </span>
             <span class="footer__brand-copy">
               <span class="footer__name">Строй Проект</span>
               <span class="footer__tagline">Архитектурное проектирование частных и коммерческих объектов</span>
@@ -140,19 +142,30 @@ onBeforeUnmount(() => {
 }
 
 .footer__mark {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid rgba(201, 169, 110, 0.22);
-  background: rgba(201, 169, 110, 0.08);
+  width: 92px;
+  height: 92px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(212, 175, 122, 0.24) 0%, rgba(212, 175, 122, 0.1) 44%, rgba(0, 196, 180, 0.05) 100%),
+    rgba(18, 30, 51, 0.56);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
-  line-height: 1;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  color: #c9a96e;
+  box-shadow:
+    0 0 14px rgba(212, 175, 122, 0.14),
+    0 0 22px rgba(0, 196, 180, 0.06);
+  overflow: hidden;
+}
+
+.footer__mark-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 20px;
+  transform: scale(1.28);
+  transform-origin: center;
+  filter: drop-shadow(0 0 7px rgba(212, 175, 122, 0.11));
 }
 
 .footer__brand-copy {

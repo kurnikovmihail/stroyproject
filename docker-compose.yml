@@ -1,0 +1,9 @@
+services:
+  stroyproject:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stroyproject-web
+    ports:
+      - "8080:80"
+    restart: unless-stopped

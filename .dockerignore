@@ -1,0 +1,10 @@
+node_modules
+dist
+.git
+.gitignore
+.vscode
+.DS_Store
+*.log
+*.md
+ChatGPT Image*.png
+фотки проектов и директока

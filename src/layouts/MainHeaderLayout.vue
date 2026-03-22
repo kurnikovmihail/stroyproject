@@ -29,9 +29,7 @@ const compactNavLinks = computed(() => props.navLinks.slice(0, 2))
 
         <a href="#hero" class="main-header__brand" @click="closeMobileMenu">
           <span class="main-header__logo" aria-hidden="true">
-            <svg viewBox="0 0 28 28" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.6">
-              <path d="M5 20 14 4l9 16M8.5 14h11" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+            <img class="main-header__logo-image" src="/images/logo.png" alt="" loading="eager" decoding="async" />
           </span>
           <span class="min-w-0">
             <span class="block truncate text-sm font-medium text-[#e8edf4]">Stroy Project</span>
@@ -156,12 +154,27 @@ const compactNavLinks = computed(() => props.navLinks.slice(0, 2))
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  border: 1px solid rgba(212, 175, 122, 0.52);
-  background: rgba(212, 175, 122, 0.13);
-  color: rgba(212, 175, 122, 0.96);
+  width: 62px;
+  height: 62px;
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(212, 175, 122, 0.24) 0%, rgba(212, 175, 122, 0.1) 44%, rgba(0, 196, 180, 0.05) 100%),
+    rgba(18, 30, 51, 0.56);
+  box-shadow:
+    0 0 12px rgba(212, 175, 122, 0.14),
+    0 0 18px rgba(0, 196, 180, 0.06);
+  overflow: hidden;
+}
+
+.main-header__logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 15px;
+  transform: scale(1.28);
+  transform-origin: center;
+  filter: drop-shadow(0 0 6px rgba(212, 175, 122, 0.1));
 }
 
 .main-header__nav {
