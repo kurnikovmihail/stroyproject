@@ -84,7 +84,10 @@ onBeforeUnmount(() => {
 
       <div class="footer__bottom footer-reveal footer-reveal--bottom">
         <p class="footer__copyright">© {{ currentYear }} Строй Проект</p>
-        <p class="footer__descriptor">Архитектурное проектирование частных и коммерческих объектов</p>
+        <p class="footer__descriptor">
+          Архитектурное проектирование частных и коммерческих объектов ·
+          <a href="#privacy-policy" class="footer__legal-link">Политика конфиденциальности</a>
+        </p>
         <a href="#hero" class="footer__top-link">
           <span>Наверх</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
@@ -314,6 +317,17 @@ onBeforeUnmount(() => {
 
 .footer__descriptor {
   text-align: center;
+}
+
+.footer__legal-link {
+  color: #e0e0e0;
+  text-decoration-color: rgba(201, 169, 110, 0.55);
+  text-underline-offset: 2px;
+  transition: color 220ms ease;
+}
+
+.footer__legal-link:hover {
+  color: #c9a96e;
 }
 
 .footer__top-link {

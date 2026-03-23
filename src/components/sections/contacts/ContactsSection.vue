@@ -13,6 +13,7 @@ const formState = reactive({
   objectType: '',
   firstStep: '',
   comment: '',
+  consent: false,
 })
 
 const submitForm = () => {
@@ -24,6 +25,7 @@ const submitForm = () => {
   formState.objectType = ''
   formState.firstStep = ''
   formState.comment = ''
+  formState.consent = false
 
   formRef.value?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
 }
@@ -122,6 +124,24 @@ onBeforeUnmount(() => {
                 name="comment"
                 placeholder="Кратко опишите задачу: участок, площадь, сроки или ограничения"
               ></textarea>
+            </label>
+          </div>
+
+          <div class="contact-form__row">
+            <label class="contact-form__consent">
+              <input
+                v-model="formState.consent"
+                class="contact-form__consent-input"
+                type="checkbox"
+                name="consent"
+                required
+              />
+              <span class="contact-form__consent-box" aria-hidden="true"></span>
+              <span class="contact-form__consent-text">
+                Я соглашаюсь на обработку персональных данных и принимаю условия
+                <a href="#privacy-policy">политики конфиденциальности</a> и
+                <a href="#consent-agreement">согласия на обработку данных</a>.
+              </span>
             </label>
           </div>
 
@@ -285,6 +305,69 @@ onBeforeUnmount(() => {
 .contact-form__field {
   display: grid;
   gap: 8px;
+}
+
+.contact-form__consent {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.contact-form__consent-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contact-form__consent-box {
+  margin-top: 1px;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.contact-form__consent-box::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 9px;
+  border-right: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  transform: translate(5px, 2px) rotate(45deg);
+}
+
+.contact-form__consent-input:checked + .contact-form__consent-box {
+  border-color: rgba(0, 196, 180, 0.68);
+  background: rgba(0, 196, 180, 0.18);
+}
+
+.contact-form__consent-input:checked + .contact-form__consent-box::after {
+  border-right-color: #dffaf7;
+  border-bottom-color: #dffaf7;
+}
+
+.contact-form__consent-input:focus-visible + .contact-form__consent-box {
+  box-shadow: 0 0 0 3px rgba(0, 196, 180, 0.14);
+}
+
+.contact-form__consent-text {
+  font-size: 13px;
+  line-height: 1.58;
+  color: #a7b0c1;
+}
+
+.contact-form__consent-text a {
+  color: #e0e0e0;
+  text-decoration-color: rgba(201, 169, 110, 0.5);
+  text-underline-offset: 2px;
 }
 
 .contact-form__label {
@@ -700,6 +783,7 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .contact-reveal,
   .contact-form__control,
+  .contact-form__consent-box,
   .contact-form__submit,
   .contact-form__submit svg,
   .contact-panel__messenger,

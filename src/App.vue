@@ -17,6 +17,7 @@ import FaqSection from './components/sections/faq/FaqSection.vue'
 import ReviewsSection from './components/sections/reviews/ReviewsSection.vue'
 import LeadMagnetsSection from './components/sections/lead-magnets/LeadMagnetsSection.vue'
 import ContactsSection from './components/sections/contacts/ContactsSection.vue'
+import LegalSection from './components/sections/legal/LegalSection.vue'
 import FooterSection from './components/sections/footer/FooterSection.vue'
 
 const navLinks = [
@@ -66,6 +67,7 @@ onBeforeUnmount(() => {
     <ReviewsSection />
     <LeadMagnetsSection />
     <ContactsSection />
+    <LegalSection />
     <FooterSection />
 
     <button
