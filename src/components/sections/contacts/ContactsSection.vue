@@ -4,6 +4,8 @@ import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 const formRef = ref(null)
 const sectionRef = ref(null)
 const isSubmitted = ref(false)
+const isSubmitting = ref(false)
+const submitError = ref('')
 const isVisible = ref(false)
 let observer
 
@@ -16,18 +18,50 @@ const formState = reactive({
   consent: false,
 })
 
-const submitForm = () => {
-  isSubmitted.value = true
+const submitForm = async () => {
+  if (isSubmitting.value) return
 
-  // Demo flow: in production this should call API
-  formState.name = ''
-  formState.phone = ''
-  formState.objectType = ''
-  formState.firstStep = ''
-  formState.comment = ''
-  formState.consent = false
+  isSubmitting.value = true
+  isSubmitted.value = false
+  submitError.value = ''
 
-  formRef.value?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  try {
+    const response = await fetch('/api/leads', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: formState.name,
+        phone: formState.phone,
+        objectType: formState.objectType,
+        firstStep: formState.firstStep,
+        comment: formState.comment,
+        consent: formState.consent,
+      }),
+    })
+
+    const payload = await response.json().catch(() => ({}))
+
+    if (!response.ok) {
+      throw new Error(payload.message || 'Не удалось отправить заявку. Попробуйте ещё раз.')
+    }
+
+    isSubmitted.value = true
+
+    formState.name = ''
+    formState.phone = ''
+    formState.objectType = ''
+    formState.firstStep = ''
+    formState.comment = ''
+    formState.consent = false
+
+    formRef.value?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  } catch (error) {
+    submitError.value = error instanceof Error ? error.message : 'Произошла ошибка при отправке формы.'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 onMounted(() => {
@@ -146,8 +180,8 @@ onBeforeUnmount(() => {
           </div>
 
           <div class="contact-form__row contact-form__row--submit">
-            <button type="submit" class="contact-form__submit">
-              <span>Узнать стоимость проекта</span>
+            <button type="submit" class="contact-form__submit" :disabled="isSubmitting">
+              <span>{{ isSubmitting ? 'Отправляем заявку…' : 'Узнать стоимость проекта' }}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
                 <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
@@ -155,6 +189,12 @@ onBeforeUnmount(() => {
 
             <p class="contact-form__note">Ответим в рабочее время обычно в течение 10–15 минут.</p>
           </div>
+
+          <transition name="contact-success">
+            <div v-if="submitError" class="contact-form__error" role="alert" aria-live="polite">
+              {{ submitError }}
+            </div>
+          </transition>
 
           <transition name="contact-success">
             <div v-if="isSubmitted" class="contact-form__success" role="status" aria-live="polite">
@@ -484,11 +524,29 @@ onBeforeUnmount(() => {
   transform: translateX(3px);
 }
 
+.contact-form__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+  transform: none;
+  box-shadow: none;
+}
+
 .contact-form__note {
   margin: 0;
   font-size: 13px;
   line-height: 1.5;
   color: #a7b0c1;
+}
+
+.contact-form__error {
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 107, 53, 0.38);
+  background: rgba(255, 107, 53, 0.12);
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #ffe6dc;
 }
 
 .contact-form__success {

@@ -1,61 +1,68 @@
 # Deploy без домена (по IP)
 
-Ниже два варианта: через Docker (рекомендовано) и через системный Nginx.
+Проект разворачивается через Docker Compose:
+- `stroyproject-web` — фронт (Vue + Nginx)
+- `stroyproject-api` — API для отправки заявок в amoCRM
 
-## 1) Docker (рекомендовано)
-
-### Требования
+## 1) Требования
 - Ubuntu/Debian сервер
-- Установлены Docker и Docker Compose plugin
+- Docker Engine
+- Docker Compose v2 (`docker compose`)
 
-### Запуск
+## 2) Первый запуск
 ```bash
-# на сервере
 cd /path/to/stroyproject
 
+# создать файл окружения из примера
+cp .env.example .env
+
+# заполнить amoCRM переменные в .env
+nano .env
+
+# старт
 docker compose up -d --build
 ```
 
-После запуска сайт доступен по:
+Сайт будет доступен по:
 - `http://<SERVER_IP>:8080`
 
-### Обновление
+## 3) Обновление
 ```bash
 cd /path/to/stroyproject
 git pull
 docker compose up -d --build
 ```
 
-### Остановка
+## 4) Проверка
+```bash
+docker compose ps
+curl -I http://127.0.0.1:8080
+curl http://127.0.0.1:8080/api/health
+```
+
+## 5) Остановка
 ```bash
 docker compose down
 ```
 
-## 2) Nginx на сервере (без Docker)
+## 6) Переменные amoCRM (.env)
+Обязательные, если включена интеграция:
+- `AMO_ENABLED=true`
+- `AMO_SUBDOMAIN` (например `mycompany` для `https://mycompany.amocrm.ru`)
+- `AMO_CLIENT_ID`
+- `AMO_CLIENT_SECRET`
+- `AMO_REDIRECT_URI`
+- `AMO_REFRESH_TOKEN`
 
-### Сборка проекта
-```bash
-npm ci
-npm run build
-```
+Опционально:
+- `AMO_PIPELINE_ID`
+- `AMO_STATUS_ID`
+- `AMO_SOURCE_TAG`
 
-### Копирование `dist`
-Скопируйте `dist` в `/var/www/stroyproject/dist`.
-
-### Конфиг Nginx
-Используйте `deploy/nginx/default.conf` как основу и замените:
-- `root /usr/share/nginx/html;` на `root /var/www/stroyproject/dist;`
-
-После этого:
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-Сайт будет доступен по:
-- `http://<SERVER_IP>` (если nginx слушает 80)
+Если `AMO_ENABLED=false`, API запустится, но отправка лидов в CRM будет отключена.
 
 ## Что уже подготовлено в проекте
-- `Dockerfile` — сборка Vite + отдача через Nginx
-- `docker-compose.yml` — быстрый старт контейнера
-- `deploy/nginx/default.conf` — SPA fallback + кеширование статики
+- `Dockerfile` — сборка фронта и отдача через Nginx
+- `Dockerfile.api` — API-сервис для интеграции с amoCRM
+- `docker-compose.yml` — запуск фронта + API + volume для токена OAuth
+- `deploy/nginx/default.conf` — SPA fallback + прокси `/api/*` на backend
