@@ -67,8 +67,8 @@ onBeforeUnmount(() => {
 
         <div class="footer__contacts">
           <p class="footer__heading">Контакты</p>
-          <a href="tel:+79384633003" class="footer__phone">+7 (966) 772-22-80</a>
-          <a href="mailto:info@stroyproject.ru" class="footer__email">proekt@12393.ru</a>
+          <a href="tel:+79667722280" class="footer__phone">+7 (966) 772-22-80</a>
+          <a href="mailto:proekt@12393.ru" class="footer__email">proekt@12393.ru</a>
           <p class="footer__location">35400, Сочи, Советская 40, этаж 6</p>
         </div>
 
@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
           <p class="footer__heading">Быстрая связь</p>
           <p class="footer__response">В рабочее время отвечаем обычно до 15 минут</p>
           <div class="footer__messengers">
-            <a href="https://wa.me/79384633003" target="_blank" rel="noopener noreferrer" class="footer__capsule">WhatsApp</a>
+            <a href="https://wa.me/79667722280" target="_blank" rel="noopener noreferrer" class="footer__capsule">WhatsApp</a>
             <a href="https://t.me/stroyproject_arch" target="_blank" rel="noopener noreferrer" class="footer__capsule">Telegram</a>
           </div>
         </div>
@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
         <p class="footer__copyright">© {{ currentYear }} Строй Проект</p>
         <p class="footer__descriptor">
           Архитектурное проектирование частных и коммерческих объектов ·
-          <a href="#privacy-policy" class="footer__legal-link">Политика конфиденциальности</a>
+          <a href="#privacy" class="footer__legal-link">Правовая информация</a>
         </p>
         <a href="#hero" class="footer__top-link">
           <span>Наверх</span>

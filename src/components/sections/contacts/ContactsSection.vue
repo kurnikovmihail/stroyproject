@@ -206,19 +206,20 @@ onBeforeUnmount(() => {
         <aside class="contact-panel">
           <div class="contact-panel__identity">
             <h3 class="contact-panel__title">Если удобнее — напишите напрямую</h3>
-            <a href="tel:+79384633003" class="contact-panel__phone">+7 (938) 463-30-03</a>
-            <a href="mailto:info@stroyproject.ru" class="contact-panel__email">info@stroyproject.ru</a>
+            <a href="tel:+79667722280" class="contact-panel__phone">+7 (966) 772-22-80</a>
+            <br>
+            <a href="mailto:proekt@12393.ru" class="contact-panel__email">proekt@12393.ru</a>
           </div>
 
           <div class="contact-panel__office">
             <p class="contact-panel__subtitle">Офис и география</p>
-            <p class="contact-panel__text">Офис в Сочи, ул. Несебрская, 6. Работаем дистанционно по всей России и СНГ.</p>
+            <p class="contact-panel__text">35400, Сочи, Советская 40, этаж 6. Работаем дистанционно по всей России и СНГ.</p>
           </div>
 
           <div class="contact-panel__response">Обычно отвечаем в рабочее время до 15 минут</div>
 
           <div class="contact-panel__messengers">
-            <a href="https://wa.me/79384633003" target="_blank" rel="noopener noreferrer" class="contact-panel__messenger">
+            <a href="https://wa.me/79667722280" target="_blank" rel="noopener noreferrer" class="contact-panel__messenger">
               <span class="contact-panel__messenger-icon" aria-hidden="true">W</span>
               <span>WhatsApp</span>
             </a>
