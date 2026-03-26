@@ -40,7 +40,11 @@ app.use(express.json({ limit: '256kb' }))
 app.use(morgan('tiny'))
 
 app.get('/api/health', (_req, res) => {
-  res.status(200).json({ ok: true, provider: appConfig.amo.enabled ? 'amoCRM' : 'disabled' })
+  res.status(200).json({
+    ok: true,
+    provider: appConfig.amo.enabled ? 'amoCRM' : 'disabled',
+    amoAuthMode: appConfig.amo.enabled ? appConfig.amo.authMode : null,
+  })
 })
 
 app.post('/api/leads', async (req, res) => {
@@ -92,5 +96,6 @@ app.use((_req, res) => {
 
 app.listen(appConfig.port, () => {
   console.log(`[api] listening on :${appConfig.port} (${appConfig.nodeEnv})`)
-  console.log(`[api] amoCRM integration: ${appConfig.amo.enabled ? 'enabled' : 'disabled'}`)
+  const amoMode = appConfig.amo.enabled ? `enabled (${appConfig.amo.authMode})` : 'disabled'
+  console.log(`[api] amoCRM integration: ${amoMode}`)
 })

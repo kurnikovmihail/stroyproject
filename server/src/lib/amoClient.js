@@ -7,12 +7,14 @@ export class AmoClient {
   constructor(config) {
     this.config = config
     this.baseUrl = config.subdomain ? `https://${config.subdomain}.amocrm.ru` : ''
+    this.authMode = config.authMode || (config.longLivedToken ? 'token' : 'oauth')
+    this.longLivedToken = String(config.longLivedToken || '').trim()
     this.tokenState = {
-      accessToken: '',
+      accessToken: this.authMode === 'token' ? this.longLivedToken : '',
       refreshToken: config.refreshToken,
       expiresAt: 0,
     }
-    this.tokenLoaded = false
+    this.tokenLoaded = this.authMode === 'token'
   }
 
   get isEnabled() {
@@ -115,8 +117,8 @@ export class AmoClient {
       },
     })
 
-    if (response.status === 401 && retry) {
-      await this.refreshAccessToken(true)
+    if (response.status === 401 && retry && this.authMode === 'oauth') {
+      await this.refreshAccessToken()
       return this.request(endpoint, options, false)
     }
 
@@ -133,6 +135,13 @@ export class AmoClient {
   }
 
   async getAccessToken() {
+    if (this.authMode === 'token') {
+      if (!this.longLivedToken) {
+        throw new Error('Missing long-lived token for amoCRM auth mode "token"')
+      }
+      return this.longLivedToken
+    }
+
     if (!this.tokenLoaded) {
       await this.loadTokenState()
     }
@@ -145,10 +154,12 @@ export class AmoClient {
     return this.tokenState.accessToken
   }
 
-  async refreshAccessToken(forceUsingStoredRefreshToken) {
-    const refreshToken = forceUsingStoredRefreshToken
-      ? this.tokenState.refreshToken || this.config.refreshToken
-      : this.tokenState.refreshToken || this.config.refreshToken
+  async refreshAccessToken() {
+    if (this.authMode !== 'oauth') {
+      throw new Error('refreshAccessToken is available only in amoCRM auth mode "oauth"')
+    }
+
+    const refreshToken = this.tokenState.refreshToken || this.config.refreshToken
 
     if (!refreshToken) {
       throw new Error('Missing refresh token for amoCRM OAuth')
@@ -184,6 +195,8 @@ export class AmoClient {
   }
 
   async loadTokenState() {
+    if (this.authMode !== 'oauth') return
+
     this.tokenLoaded = true
 
     try {
@@ -204,6 +217,8 @@ export class AmoClient {
   }
 
   async persistTokenState() {
+    if (this.authMode !== 'oauth') return
+
     try {
       const targetDir = path.dirname(this.config.tokenStoragePath)
       await fs.mkdir(targetDir, { recursive: true })

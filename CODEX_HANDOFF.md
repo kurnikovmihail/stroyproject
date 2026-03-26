@@ -97,10 +97,9 @@ Legal блок:
 
 Обязательные env при включении:
 - `AMO_SUBDOMAIN`
-- `AMO_CLIENT_ID`
-- `AMO_CLIENT_SECRET`
-- `AMO_REDIRECT_URI`
-- `AMO_REFRESH_TOKEN`
+- `AMO_AUTH_MODE`:
+  - `oauth`: `AMO_CLIENT_ID`, `AMO_CLIENT_SECRET`, `AMO_REDIRECT_URI`, `AMO_REFRESH_TOKEN`
+  - `token`: `AMO_LONG_LIVED_TOKEN`
 
 Опциональные env:
 - `AMO_PIPELINE_ID`
@@ -112,6 +111,10 @@ OAuth поведение:
 - Access/refresh токены кешируются в JSON-файл.
 - По умолчанию файл токена: `/data/amo-token.json`.
 - В Docker это хранится в volume `amo_data`.
+
+Режим `token`:
+- API использует `AMO_LONG_LIVED_TOKEN` как Bearer-токен напрямую.
+- Refresh-цикл и storage файла токена в этом режиме не используются.
 
 ## 6) Docker и деплой
 

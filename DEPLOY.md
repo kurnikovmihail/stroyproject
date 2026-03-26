@@ -49,10 +49,9 @@ docker compose down
 Обязательные, если включена интеграция:
 - `AMO_ENABLED=true`
 - `AMO_SUBDOMAIN` (например `mycompany` для `https://mycompany.amocrm.ru`)
-- `AMO_CLIENT_ID`
-- `AMO_CLIENT_SECRET`
-- `AMO_REDIRECT_URI`
-- `AMO_REFRESH_TOKEN`
+- `AMO_AUTH_MODE`:
+  - `oauth` -> нужны `AMO_CLIENT_ID`, `AMO_CLIENT_SECRET`, `AMO_REDIRECT_URI`, `AMO_REFRESH_TOKEN`
+  - `token` -> нужен `AMO_LONG_LIVED_TOKEN`
 
 Опционально:
 - `AMO_PIPELINE_ID`
