@@ -5,6 +5,24 @@ const microLine = [
   'Работаем по всей России',
   'Личный контроль директора',
 ]
+
+const openCallibriCall = () => {
+  const launchers = [
+    window.callibriCallbackWidgetStart,
+    window.callibriWidgetStart,
+    window.callibriOnlineChatStart,
+    window.callibriPopupWidgetStart,
+  ]
+
+  for (const launcher of launchers) {
+    if (typeof launcher === 'function') {
+      launcher()
+      return
+    }
+  }
+
+  window.location.href = 'tel:+79667722280'
+}
 </script>
 
 <template>
@@ -43,6 +61,7 @@ const microLine = [
 
           <div class="immersive-hero__actions">
             <a href="#contacts" class="immersive-hero__btn-primary">Получить консультацию</a>
+            <button type="button" class="immersive-hero__btn-call" @click="openCallibriCall">Заказать звонок</button>
             <a href="#portfolio" class="immersive-hero__btn-secondary">Посмотреть реализованные проекты</a>
           </div>
 
@@ -304,7 +323,8 @@ const microLine = [
 }
 
 .immersive-hero__btn-primary,
-.immersive-hero__btn-secondary {
+.immersive-hero__btn-secondary,
+.immersive-hero__btn-call {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -313,6 +333,8 @@ const microLine = [
   padding: 0 16px;
   font-size: 13px;
   font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
@@ -336,6 +358,17 @@ const microLine = [
 .immersive-hero__btn-secondary:hover {
   border-color: rgba(255, 255, 255, 0.25);
   background: rgba(10, 20, 35, 0.5);
+}
+
+.immersive-hero__btn-call {
+  border: 1px solid rgba(201, 169, 110, 0.34);
+  background: rgba(201, 169, 110, 0.12);
+  color: rgba(231, 220, 195, 0.96);
+}
+
+.immersive-hero__btn-call:hover {
+  border-color: rgba(201, 169, 110, 0.52);
+  background: rgba(201, 169, 110, 0.2);
 }
 
 .immersive-hero__techline {
@@ -596,6 +629,10 @@ const microLine = [
   }
 
   .immersive-hero__btn-primary {
+    width: 100%;
+  }
+
+  .immersive-hero__btn-call {
     width: 100%;
   }
 

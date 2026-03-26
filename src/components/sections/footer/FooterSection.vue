@@ -15,6 +15,24 @@ const quickLinks = [
   { label: 'Контакты', href: '#contacts' },
 ]
 
+const openCallibriCall = () => {
+  const launchers = [
+    window.callibriCallbackWidgetStart,
+    window.callibriWidgetStart,
+    window.callibriOnlineChatStart,
+    window.callibriPopupWidgetStart,
+  ]
+
+  for (const launcher of launchers) {
+    if (typeof launcher === 'function') {
+      launcher()
+      return
+    }
+  }
+
+  window.location.href = 'tel:+79667722280'
+}
+
 onMounted(() => {
   observer = new IntersectionObserver(
     (entries) => {
@@ -76,8 +94,10 @@ onBeforeUnmount(() => {
           <p class="footer__heading">Быстрая связь</p>
           <p class="footer__response">В рабочее время отвечаем обычно до 15 минут</p>
           <div class="footer__messengers">
-            <a href="https://wa.me/79667722280" target="_blank" rel="noopener noreferrer" class="footer__capsule">WhatsApp</a>
-            <a href="https://t.me/stroyproject_arch" target="_blank" rel="noopener noreferrer" class="footer__capsule">Telegram</a>
+            <button type="button" class="footer__capsule footer__capsule--callback" @click="openCallibriCall">
+              Заказать звонок
+            </button>
+            <a href="https://t.me/StroyProekt123" target="_blank" rel="noopener noreferrer" class="footer__capsule">Telegram</a>
           </div>
         </div>
       </div>
@@ -286,16 +306,29 @@ onBeforeUnmount(() => {
   font-size: 14px;
   line-height: 1;
   color: #e0e0e0;
+  font-family: inherit;
+  cursor: pointer;
   transition:
     border-color 220ms ease,
     background-color 220ms ease,
     box-shadow 220ms ease;
 }
 
+.footer__capsule--callback {
+  border-color: rgba(201, 169, 110, 0.32);
+  background: rgba(201, 169, 110, 0.1);
+}
+
 .footer__capsule:hover {
   border-color: rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.08);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+}
+
+.footer__capsule--callback:hover {
+  border-color: rgba(201, 169, 110, 0.46);
+  background: rgba(201, 169, 110, 0.18);
+  box-shadow: 0 0 12px rgba(201, 169, 110, 0.12);
 }
 
 .footer__bottom {

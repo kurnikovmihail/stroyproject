@@ -21,10 +21,10 @@ import LegalSection from './components/sections/legal/LegalSection.vue'
 import FooterSection from './components/sections/footer/FooterSection.vue'
 
 const navLinks = [
-  { label: 'Главная', href: '#hero' },
   { label: 'Преимущества', href: '#advantages' },
   { label: 'Услуги', href: '#services' },
   { label: 'Портфолио', href: '#portfolio' },
+  { label: 'Отзывы', href: '#reviews' },
   { label: 'Контакты', href: '#contacts' },
 ]
 
