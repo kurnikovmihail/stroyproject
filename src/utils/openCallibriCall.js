@@ -108,55 +108,59 @@ const runFallback = () => {
 const getCallableLaunchers = () => {
   const runtimeConfig = window._callibri ?? {}
   const launchers = []
+  const hasModuleSettings = Boolean(runtimeConfig.module_settings)
+
+  // 1) Preferred: explicit callback widget (if enabled in Callibri account)
+  if (runtimeConfig.ms_callback && typeof window.callibriCallbackWidgetStart === 'function') {
+    launchers.push(window.callibriCallbackWidgetStart)
+  }
 
   if (runtimeConfig.is_online_chat && typeof window.callibriOnlineChatStart === 'function') {
     launchers.push(window.callibriOnlineChatStart)
-  }
-
-  if (runtimeConfig.ms_callback && typeof window.callibriCallbackWidgetStart === 'function') {
-    launchers.push(window.callibriCallbackWidgetStart)
   }
 
   if (runtimeConfig.popup_settings && typeof window.callibriPopupWidgetStart === 'function') {
     launchers.push(window.callibriPopupWidgetStart)
   }
 
-  const fallbackOrder = [
-    window.callibriWidgetStart,
-    window.callibriOnlineChatStart,
-    window.callibriCallbackWidgetStart,
-    window.callibriPopupWidgetStart,
-  ]
-
-  for (const launcher of fallbackOrder) {
-    if (typeof launcher === 'function' && !launchers.includes(launcher)) {
-      launchers.push(launcher)
-    }
+  // 2) Generic widget: use only when module settings are present.
+  if (hasModuleSettings && typeof window.callibriWidgetStart === 'function' && !launchers.includes(window.callibriWidgetStart)) {
+    launchers.push(window.callibriWidgetStart)
   }
 
   return launchers
 }
 
-export const openCallibriCall = () => {
-  const launchers = getCallableLaunchers()
-  let hasCalledAnyLauncher = false
-
-  for (const launcher of launchers) {
-    try {
-      launcher()
-      hasCalledAnyLauncher = true
-    } catch {
-      // Try the next available launcher.
-    }
+const attemptLaunchers = (launchers, index = 0) => {
+  if (index >= launchers.length) {
+    console.warn('[Callibri] Widget did not open from available launchers. Fallback activated.')
+    runFallback()
+    return
   }
 
-  if (!hasCalledAnyLauncher) {
-    runFallback()
+  const launcher = launchers[index]
+
+  try {
+    launcher()
+  } catch (error) {
+    console.warn('[Callibri] Launcher failed, trying next one.', error)
+    attemptLaunchers(launchers, index + 1)
     return
   }
 
   window.setTimeout(() => {
     if (hasOpenedCallibriWidget()) return
-    runFallback()
+    attemptLaunchers(launchers, index + 1)
   }, CALLIBRI_OPEN_DELAY_MS)
+}
+
+export const openCallibriCall = () => {
+  const launchers = getCallableLaunchers()
+  if (!launchers.length) {
+    console.warn('[Callibri] No enabled widget modules in current Callibri config.', window._callibri)
+    runFallback()
+    return
+  }
+
+  attemptLaunchers(launchers, 0)
 }
