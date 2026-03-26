@@ -1,5 +1,6 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { openCallibriCall } from '../../../utils/openCallibriCall'
 
 const sectionRef = ref(null)
 const isVisible = ref(false)
@@ -14,24 +15,6 @@ const quickLinks = [
   { label: 'Стоимость', href: '#pricing' },
   { label: 'Контакты', href: '#contacts' },
 ]
-
-const openCallibriCall = () => {
-  const launchers = [
-    window.callibriCallbackWidgetStart,
-    window.callibriWidgetStart,
-    window.callibriOnlineChatStart,
-    window.callibriPopupWidgetStart,
-  ]
-
-  for (const launcher of launchers) {
-    if (typeof launcher === 'function') {
-      launcher()
-      return
-    }
-  }
-
-  window.location.href = 'tel:+79667722280'
-}
 
 onMounted(() => {
   observer = new IntersectionObserver(

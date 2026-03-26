@@ -1,5 +1,6 @@
 <script setup>
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { openCallibriCall } from '../../../utils/openCallibriCall'
 
 const formRef = ref(null)
 const sectionRef = ref(null)
@@ -62,24 +63,6 @@ const submitForm = async () => {
   } finally {
     isSubmitting.value = false
   }
-}
-
-const openCallibriCall = () => {
-  const launchers = [
-    window.callibriCallbackWidgetStart,
-    window.callibriWidgetStart,
-    window.callibriOnlineChatStart,
-    window.callibriPopupWidgetStart,
-  ]
-
-  for (const launcher of launchers) {
-    if (typeof launcher === 'function') {
-      launcher()
-      return
-    }
-  }
-
-  window.location.href = 'tel:+79667722280'
 }
 
 onMounted(() => {

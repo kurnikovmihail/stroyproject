@@ -1,28 +1,12 @@
 <script setup>
+import { openCallibriCall } from '../../utils/openCallibriCall'
+
 const microLine = [
   '15+ лет экспертизы',
   '70+ реализованных объектов',
   'Работаем по всей России',
   'Личный контроль директора',
 ]
-
-const openCallibriCall = () => {
-  const launchers = [
-    window.callibriCallbackWidgetStart,
-    window.callibriWidgetStart,
-    window.callibriOnlineChatStart,
-    window.callibriPopupWidgetStart,
-  ]
-
-  for (const launcher of launchers) {
-    if (typeof launcher === 'function') {
-      launcher()
-      return
-    }
-  }
-
-  window.location.href = 'tel:+79667722280'
-}
 </script>
 
 <template>
