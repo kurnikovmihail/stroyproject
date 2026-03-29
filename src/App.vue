@@ -95,8 +95,8 @@ onBeforeUnmount(() => {
 
 .scroll-top-button {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
+  right: 18px;
+  bottom: calc(104px + env(safe-area-inset-bottom, 0px));
   z-index: 60;
   width: 52px;
   height: 52px;
@@ -130,8 +130,8 @@ onBeforeUnmount(() => {
 
 @media (max-width: 1023px) {
   .scroll-top-button {
-    right: 16px;
-    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 14px;
+    bottom: calc(132px + env(safe-area-inset-bottom, 0px));
     width: 48px;
     height: 48px;
   }

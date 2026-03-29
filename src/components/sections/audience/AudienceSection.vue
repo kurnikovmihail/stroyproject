@@ -119,11 +119,6 @@ onBeforeUnmount(() => {
 
           <div class="audience-card__footer">
             <span class="audience-card__hint">{{ card.hint }}</span>
-            <span class="audience-card__arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </span>
           </div>
         </article>
       </div>
@@ -324,7 +319,7 @@ onBeforeUnmount(() => {
   padding-top: 16px;
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
 }
 
@@ -333,22 +328,6 @@ onBeforeUnmount(() => {
   line-height: 1.4;
   font-weight: 500;
   color: #e0e0e0;
-}
-
-.audience-card__arrow {
-  width: 18px;
-  height: 18px;
-  color: #c9a96e;
-  flex-shrink: 0;
-  transition: transform 280ms ease;
-}
-
-.audience-card--cool .audience-card__arrow {
-  color: #00c4b4;
-}
-
-.audience-card:hover .audience-card__arrow {
-  transform: translateX(4px);
 }
 
 .for-whom__summary {
@@ -542,7 +521,6 @@ onBeforeUnmount(() => {
   }
 
   .audience-card,
-  .audience-card__arrow,
   .for-whom__summary-cta,
   .for-whom__summary-cta svg {
     transition: none;

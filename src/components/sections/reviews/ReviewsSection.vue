@@ -8,7 +8,10 @@ let observer
 const featuredReview = {
   person: 'Анна и Максим',
   role: 'Частный дом на сложном рельефе',
-  image: '/images/review-person-01.png',
+  image: {
+    lg: '/images/review-person-01.webp',
+    sm: '/images/review-person-01-sm.webp',
+  },
   imageAlt: 'Анна и Максим, клиентский отзыв о частном доме',
   quote:
     '«Был страх, что красивую идею не получится построить без резкого роста бюджета. В итоге получили рабочий проект, по которому строители шли без постоянных уточнений и пересборки планировок»',
@@ -20,7 +23,10 @@ const secondaryReviews = [
   {
     name: 'Алексей Р.',
     role: 'Бутик-отель',
-    image: '/images/review-person-02.png',
+    image: {
+      lg: '/images/review-person-02.webp',
+      sm: '/images/review-person-02-sm.webp',
+    },
     imageAlt: 'Алексей Р., отзыв по проектированию бутик-отеля',
     quote:
       '«Нужен был не просто красивый проект, а рабочая схема под бизнес-задачу. В результате получили понятную логику потоков, меньше спорных решений с подрядчиками и прогнозируемую эксплуатацию»',
@@ -29,7 +35,10 @@ const secondaryReviews = [
   {
     name: 'Ирина К.',
     role: 'Реконструкция исторического здания',
-    image: '/images/review-person-03.png',
+    image: {
+      lg: '/images/review-person-03.webp',
+      sm: '/images/review-person-03-sm.webp',
+    },
     imageAlt: 'Ирина К., отзыв о реконструкции исторического здания',
     quote:
       '«Самый ценный результат — аккуратное совмещение нового функционала с характером существующего объекта. Проект оказался реалистичным и не разрушил сильные стороны здания»',
@@ -84,7 +93,17 @@ onBeforeUnmount(() => {
 
       <article class="reviews-featured reviews-reveal reviews-reveal--featured">
         <div class="reviews-featured__media">
-          <img :src="featuredReview.image" :alt="featuredReview.imageAlt" loading="lazy" decoding="async" />
+          <img
+            :src="featuredReview.image.sm"
+            :srcset="`${featuredReview.image.sm} 640w, ${featuredReview.image.lg} 1024w`"
+            sizes="(max-width: 1023px) 100vw, 320px"
+            :alt="featuredReview.imageAlt"
+            width="640"
+            height="960"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+          />
         </div>
 
         <div class="reviews-featured__content">
@@ -114,7 +133,17 @@ onBeforeUnmount(() => {
         >
           <div class="review-card__head">
             <div class="review-card__avatar">
-              <img :src="review.image" :alt="review.imageAlt" loading="lazy" decoding="async" />
+              <img
+                :src="review.image.sm"
+                :srcset="`${review.image.sm} 640w, ${review.image.lg} 1024w`"
+                sizes="(max-width: 1023px) 42vw, 140px"
+                :alt="review.imageAlt"
+                width="640"
+                height="960"
+                loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+              />
             </div>
             <div class="review-card__identity">
               <h3 class="review-card__name">{{ review.name }}</h3>

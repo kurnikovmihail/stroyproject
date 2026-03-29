@@ -1,6 +1,5 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import { openCallibriCall } from '../../../utils/openCallibriCall'
 
 const sectionRef = ref(null)
 const isVisible = ref(false)
@@ -48,7 +47,7 @@ onBeforeUnmount(() => {
         <div class="footer__brand">
           <a href="#hero" class="footer__brand-link">
             <span class="footer__mark" aria-hidden="true">
-              <img class="footer__mark-image" src="/images/logo.png" alt="" loading="lazy" decoding="async" />
+              <img class="footer__mark-image" src="/images/logo.webp" alt="" width="512" height="512" loading="lazy" decoding="async" />
             </span>
             <span class="footer__brand-copy">
               <span class="footer__name">Строй Проект</span>
@@ -77,9 +76,6 @@ onBeforeUnmount(() => {
           <p class="footer__heading">Быстрая связь</p>
           <p class="footer__response">В рабочее время отвечаем обычно до 15 минут</p>
           <div class="footer__messengers">
-            <button type="button" class="footer__capsule footer__capsule--callback" @click="openCallibriCall">
-              Заказать звонок
-            </button>
             <a href="https://t.me/StroyProekt123" target="_blank" rel="noopener noreferrer" class="footer__capsule">Telegram</a>
           </div>
         </div>
@@ -297,21 +293,10 @@ onBeforeUnmount(() => {
     box-shadow 220ms ease;
 }
 
-.footer__capsule--callback {
-  border-color: rgba(201, 169, 110, 0.32);
-  background: rgba(201, 169, 110, 0.1);
-}
-
 .footer__capsule:hover {
   border-color: rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.08);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
-}
-
-.footer__capsule--callback:hover {
-  border-color: rgba(201, 169, 110, 0.46);
-  background: rgba(201, 169, 110, 0.18);
-  box-shadow: 0 0 12px rgba(201, 169, 110, 0.12);
 }
 
 .footer__bottom {

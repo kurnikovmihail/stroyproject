@@ -22,7 +22,11 @@ const cases = [
     task: 'Нужно было посадить дом на участок с перепадом высот, сохранить видовые точки и не усложнить стройку.',
     result: 'Сформирована каскадная структура планировок, сохранена приватность и сокращены риски переработок на площадке.',
     preview: 'Сложный рельеф',
-    image: '/images/case-01.jpg',
+    image: {
+      lg: '/images/case-01.webp',
+      md: '/images/case-01-md.webp',
+      thumb: '/images/case-01-thumb.webp',
+    },
     categories: ['private', 'premium'],
   },
   {
@@ -34,7 +38,11 @@ const cases = [
     task: 'Требовалось совместить выразительную архитектуру с логикой обслуживания, инженерией и эксплуатационной эффективностью.',
     result: 'Оптимизированы маршруты гостей и персонала, повышена эффективность площади и упрощено согласование инженерных решений.',
     preview: 'Гостиничный кейс',
-    image: '/images/case-02.jpg',
+    image: {
+      lg: '/images/case-02.webp',
+      md: '/images/case-02-md.webp',
+      thumb: '/images/case-02-thumb.webp',
+    },
     categories: ['commercial', 'premium'],
   },
   {
@@ -46,7 +54,11 @@ const cases = [
     task: 'Нужно было сохранить архитектурную чистоту формы и обеспечить надежную работу конструкций под региональные нагрузки.',
     result: 'Согласованы конструктив и архитектура без потери образа, оптимизированы узлы и кровельная логика для реальной реализации.',
     preview: 'Климатические нагрузки',
-    image: '/images/case-03.jpg',
+    image: {
+      lg: '/images/case-03.webp',
+      md: '/images/case-03-md.webp',
+      thumb: '/images/case-03-thumb.webp',
+    },
     categories: ['private', 'premium'],
   },
   {
@@ -58,7 +70,11 @@ const cases = [
     task: 'Требовалось увязать посадку, кухонные процессы, технические зоны и маршруты посетителей без потери атмосферы пространства.',
     result: 'Сбалансирована бизнес-логика и интерьерная архитектура, снижены эксплуатационные конфликты и потери площади.',
     preview: 'Ресторанный формат',
-    image: '/images/case-04.jpg',
+    image: {
+      lg: '/images/case-04.webp',
+      md: '/images/case-04-md.webp',
+      thumb: '/images/case-04-thumb.webp',
+    },
     categories: ['commercial'],
   },
   {
@@ -70,7 +86,11 @@ const cases = [
     task: 'Нужно было адаптировать существующий объект под новые задачи, сохранив архитектурный характер и техничность решений.',
     result: 'Объект получил новую функциональную модель с сохранением ключевой идентичности и управляемой стоимостью реализации.',
     preview: 'Адаптация объекта',
-    image: '/images/case-05.jpg',
+    image: {
+      lg: '/images/case-05.webp',
+      md: '/images/case-05-md.webp',
+      thumb: '/images/case-05-thumb.webp',
+    },
     categories: ['commercial'],
   },
   {
@@ -82,7 +102,11 @@ const cases = [
     task: 'Требовалось совместить статусную архитектуру, сложную посадку на участке и приватные сценарии для семьи.',
     result: 'Разработана композиция объемов с четким разделением функций, удобной логистикой и готовностью к этапной реализации.',
     preview: 'Премиум-сегмент',
-    image: '/images/case-06.jpg',
+    image: {
+      lg: '/images/case-06.webp',
+      md: '/images/case-06-md.webp',
+      thumb: '/images/case-06-thumb.webp',
+    },
     categories: ['private', 'premium'],
   },
   {
@@ -94,7 +118,11 @@ const cases = [
     task: 'Задача — получить архитектурно выразительный объект с предсказуемой моделью эксплуатации и загрузки.',
     result: 'Оптимизированы планировочные модули и инженерные сценарии, снижены операционные риски и стоимость переделок.',
     preview: 'Инвестиционный кейс',
-    image: '/images/case-07.jpg',
+    image: {
+      lg: '/images/case-07.webp',
+      md: '/images/case-07-md.webp',
+      thumb: '/images/case-07-thumb.webp',
+    },
     categories: ['commercial', 'premium'],
   },
   {
@@ -106,7 +134,11 @@ const cases = [
     task: 'Нужно было учесть ограничения по грунтам и воде, сохранив архитектурную идею и комфортную планировочную структуру.',
     result: 'Согласованы решения по фундаменту, инженерии и объемно-пространственной схеме без потери визуального качества проекта.',
     preview: 'Сложные условия',
-    image: '/images/case-08.jpg',
+    image: {
+      lg: '/images/case-08.webp',
+      md: '/images/case-08-md.webp',
+      thumb: '/images/case-08-thumb.webp',
+    },
     categories: ['private'],
   },
 ]
@@ -208,9 +240,16 @@ onBeforeUnmount(() => {
             <transition name="case-fade" mode="out-in">
               <img
                 :key="`${activeCase.id}-image`"
-                :src="activeCase.image"
+                :src="activeCase.image.md"
+                :srcset="`${activeCase.image.thumb} 640w, ${activeCase.image.md} 1400w, ${activeCase.image.lg} 2000w`"
+                sizes="(max-width: 1023px) 100vw, (max-width: 1439px) 62vw, 780px"
                 :alt="activeCase.title"
                 class="portfolio-featured__image"
+                width="2000"
+                height="1611"
+                loading="lazy"
+                decoding="async"
+                fetchpriority="low"
               />
             </transition>
 
@@ -255,7 +294,18 @@ onBeforeUnmount(() => {
               @click="selectCase(item.id)"
             >
               <div class="portfolio-secondary-card__thumb-wrap">
-                <img :src="item.image" :alt="item.title" class="portfolio-secondary-card__thumb" />
+                <img
+                  :src="item.image.thumb"
+                  :srcset="`${item.image.thumb} 640w, ${item.image.md} 1400w`"
+                  sizes="(max-width: 1023px) 86vw, 330px"
+                  :alt="item.title"
+                  class="portfolio-secondary-card__thumb"
+                  width="640"
+                  height="515"
+                  loading="lazy"
+                  decoding="async"
+                  fetchpriority="low"
+                />
               </div>
 
               <div class="portfolio-secondary-card__content">

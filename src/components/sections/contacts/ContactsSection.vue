@@ -1,6 +1,5 @@
 <script setup>
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import { openCallibriCall } from '../../../utils/openCallibriCall'
 
 const formRef = ref(null)
 const sectionRef = ref(null)
@@ -218,10 +217,6 @@ onBeforeUnmount(() => {
           </div>
 
           <div class="contact-panel__response">Обычно отвечаем в рабочее время до 15 минут</div>
-
-          <button type="button" class="contact-panel__callback" @click="openCallibriCall">
-            Заказать звонок
-          </button>
 
           <div class="contact-panel__messengers">
             <a href="https://wa.me/79667722280" target="_blank" rel="noopener noreferrer" class="contact-panel__messenger">
@@ -639,33 +634,6 @@ onBeforeUnmount(() => {
   color: #d5dce9;
 }
 
-.contact-panel__callback {
-  min-height: 50px;
-  border-radius: 16px;
-  border: 1px solid rgba(201, 169, 110, 0.34);
-  background: rgba(201, 169, 110, 0.12);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 14px;
-  font-size: 15px;
-  line-height: 1.2;
-  font-weight: 640;
-  color: #e0e0e0;
-  transition:
-    transform 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease,
-    box-shadow 220ms ease;
-}
-
-.contact-panel__callback:hover {
-  transform: translateY(-1px);
-  border-color: rgba(201, 169, 110, 0.5);
-  background: rgba(201, 169, 110, 0.2);
-  box-shadow: 0 0 14px rgba(201, 169, 110, 0.14);
-}
-
 .contact-panel__messengers {
   display: grid;
   gap: 10px;
@@ -828,11 +796,6 @@ onBeforeUnmount(() => {
 
   .contact-panel__response {
     order: 4;
-  }
-
-  .contact-panel__callback {
-    order: 5;
-    min-height: 48px;
   }
 
   .contact-panel__title {

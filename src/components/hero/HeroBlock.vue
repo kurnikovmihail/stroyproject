@@ -1,6 +1,4 @@
 <script setup>
-import { openCallibriCall } from '../../utils/openCallibriCall'
-
 const microLine = [
   '15+ лет экспертизы',
   '70+ реализованных объектов',
@@ -44,8 +42,6 @@ const microLine = [
           </p>
 
           <div class="immersive-hero__actions">
-            <a href="#contacts" class="immersive-hero__btn-primary">Получить консультацию</a>
-            <button type="button" class="immersive-hero__btn-call" @click="openCallibriCall">Заказать звонок</button>
             <a href="#portfolio" class="immersive-hero__btn-secondary">Посмотреть реализованные проекты</a>
           </div>
 
@@ -73,7 +69,6 @@ const microLine = [
         <div class="immersive-hero__mobile-card">
           <p class="text-sm font-medium text-[#eaf0f8]">Запросить консультацию</p>
           <p class="mt-1 text-xs leading-relaxed text-[#aebdd1]">Разберём задачу и предложим оптимальный состав проекта.</p>
-          <a href="#contacts" class="immersive-hero__mobile-btn">Получить консультацию</a>
         </div>
       </div>
 
@@ -110,8 +105,8 @@ const microLine = [
   position: absolute;
   inset: 0;
   background-image: image-set(
-    url('/images/hero-premium-bg.png') 1x,
-    url('/images/hero-premium-bg.png') 2x
+    url('/images/hero-premium-bg.webp') type('image/webp') 1x,
+    url('/images/hero-premium-bg.webp') type('image/webp') 2x
   );
   background-repeat: no-repeat;
   background-size: cover;
@@ -306,9 +301,7 @@ const microLine = [
   gap: 10px;
 }
 
-.immersive-hero__btn-primary,
-.immersive-hero__btn-secondary,
-.immersive-hero__btn-call {
+.immersive-hero__btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -322,17 +315,6 @@ const microLine = [
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.immersive-hero__btn-primary {
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.14);
-  color: rgba(238, 243, 251, 0.96);
-}
-
-.immersive-hero__btn-primary:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.2);
-}
-
 .immersive-hero__btn-secondary {
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(10, 20, 35, 0.32);
@@ -342,17 +324,6 @@ const microLine = [
 .immersive-hero__btn-secondary:hover {
   border-color: rgba(255, 255, 255, 0.25);
   background: rgba(10, 20, 35, 0.5);
-}
-
-.immersive-hero__btn-call {
-  border: 1px solid rgba(201, 169, 110, 0.34);
-  background: rgba(201, 169, 110, 0.12);
-  color: rgba(231, 220, 195, 0.96);
-}
-
-.immersive-hero__btn-call:hover {
-  border-color: rgba(201, 169, 110, 0.52);
-  background: rgba(201, 169, 110, 0.2);
 }
 
 .immersive-hero__techline {
@@ -417,20 +388,6 @@ const microLine = [
   background: rgba(8, 21, 36, 0.56);
   backdrop-filter: blur(11px);
   padding: 14px;
-}
-
-.immersive-hero__mobile-btn {
-  margin-top: 12px;
-  display: inline-flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: rgba(212, 175, 122, 0.94);
-  padding: 11px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #122134;
 }
 
 .immersive-hero__microline {
@@ -610,14 +567,6 @@ const microLine = [
 
   .immersive-hero__actions {
     margin-top: 16px;
-  }
-
-  .immersive-hero__btn-primary {
-    width: 100%;
-  }
-
-  .immersive-hero__btn-call {
-    width: 100%;
   }
 
   .immersive-hero__techline {

@@ -5,16 +5,34 @@ const isVisibleElement = (element) => {
   if (!element) return false
 
   const style = window.getComputedStyle(element)
-  const hasSize = element.offsetWidth > 0 || element.offsetHeight > 0
+  const rect = element.getBoundingClientRect()
+  const hasSize = rect.width > 0 && rect.height > 0
 
   return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity || 1) > 0 && hasSize
 }
 
+const hasOpenedCallbackPopup = () => {
+  const popup = document.querySelector('#cbw-popupContainer')
+  const form = document.querySelector('#cbw-form')
+
+  if (!popup || !form) return false
+
+  const popupStyle = window.getComputedStyle(popup)
+  const transform = popupStyle.transform || ''
+  const isCollapsedByTransform = transform.includes('matrix(0')
+
+  return popup.classList.contains('cbw-show') && !isCollapsedByTransform && isVisibleElement(form)
+}
+
 const hasOpenedCallibriWidget = () => {
+  if (hasOpenedCallbackPopup()) return true
+
   const selectors = [
-    '[id*="callibri"]',
-    '[class*="callibri"]',
-    '[class*="multichat"]',
+    '.callibri_widget_in',
+    '.callibri-widget-in',
+    '.callibri_chat_window',
+    '[class*="callibri"][class*="open"]',
+    '[class*="multichat"][class*="open"]',
     'iframe[src*="callibri"]',
     'iframe[src*="gudok"]',
   ]
@@ -105,6 +123,36 @@ const runFallback = () => {
   showFallbackToast()
 }
 
+const tryOpenInitializedWidget = () => {
+  const callbackWidget = window.callibriCallbackWidget
+
+  try {
+    if (callbackWidget && typeof callbackWidget.openCallbackWindow === 'function') {
+      callbackWidget.openCallbackWindow(false)
+      return true
+    }
+
+    if (callbackWidget && typeof callbackWidget.toggleVisibility === 'function') {
+      callbackWidget.toggleVisibility(false)
+      return true
+    }
+
+    if (window.callibriPopUpWidget && typeof window.callibriPopUpWidget.open === 'function') {
+      window.callibriPopUpWidget.open()
+      return true
+    }
+
+    if (typeof window.callibri_open_chat === 'function') {
+      window.callibri_open_chat()
+      return true
+    }
+  } catch (error) {
+    console.warn('[Callibri] Failed to open initialized widget instance.', error)
+  }
+
+  return false
+}
+
 const getCallableLaunchers = () => {
   const runtimeConfig = window._callibri ?? {}
   const launchers = []
@@ -149,12 +197,20 @@ const attemptLaunchers = (launchers, index = 0) => {
   }
 
   window.setTimeout(() => {
+    tryOpenInitializedWidget()
+
     if (hasOpenedCallibriWidget()) return
-    attemptLaunchers(launchers, index + 1)
+
+    window.setTimeout(() => {
+      if (hasOpenedCallibriWidget()) return
+      attemptLaunchers(launchers, index + 1)
+    }, 420)
   }, CALLIBRI_OPEN_DELAY_MS)
 }
 
-export const openCallibriCall = () => {
+const launchCallibriOrFallback = () => {
+  if (hasOpenedCallibriWidget()) return
+
   const launchers = getCallableLaunchers()
   if (!launchers.length) {
     console.warn('[Callibri] No enabled widget modules in current Callibri config.', window._callibri)
@@ -163,4 +219,20 @@ export const openCallibriCall = () => {
   }
 
   attemptLaunchers(launchers, 0)
+}
+
+export const openCallibriCall = () => {
+  if (hasOpenedCallibriWidget()) return
+
+  const openedInitializedWidget = tryOpenInitializedWidget()
+  if (openedInitializedWidget) {
+    window.setTimeout(() => {
+      if (hasOpenedCallibriWidget()) return
+      launchCallibriOrFallback()
+    }, 360)
+    if (hasOpenedCallibriWidget()) return
+    return
+  }
+
+  launchCallibriOrFallback()
 }

@@ -71,7 +71,18 @@ onBeforeUnmount(() => {
 
       <div class="director__scene">
         <div class="director-visual director-reveal director-reveal--visual">
-          <img src="/images/director-main.jpg" alt="Сергей Светлаков, директор Строй Проект" class="director-visual__image" />
+          <img
+            src="/images/director-main-sm.webp"
+            srcset="/images/director-main-sm.webp 800w, /images/director-main-md.webp 1200w, /images/director-main.webp 1800w"
+            sizes="(max-width: 1023px) 100vw, (max-width: 1439px) 52vw, 760px"
+            alt="Сергей Светлаков, директор Строй Проект"
+            class="director-visual__image"
+            width="1200"
+            height="1489"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+          />
           <div class="director-visual__overlay"></div>
 
           <div class="director-visual__caption">

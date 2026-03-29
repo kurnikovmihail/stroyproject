@@ -25,11 +25,25 @@ const compactNavLinks = computed(() => props.navLinks.slice(0, 2))
   <header class="main-header">
     <div class="main-header__shell">
       <div class="main-header__left">
-
+        <button
+          type="button"
+          class="main-header__burger lg:hidden"
+          aria-controls="site-mobile-nav"
+          :aria-expanded="mobileMenuOpen ? 'true' : 'false'"
+          :aria-label="mobileMenuOpen ? 'Закрыть меню' : 'Открыть меню'"
+          @click="toggleMobileMenu"
+        >
+          <svg v-if="!mobileMenuOpen" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+          </svg>
+          <svg v-else viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+            <path d="M6 6l12 12M18 6l-12 12" stroke-linecap="round" />
+          </svg>
+        </button>
 
         <a href="#hero" class="main-header__brand" @click="closeMobileMenu">
           <span class="main-header__logo" aria-hidden="true">
-            <img class="main-header__logo-image" src="/images/logo.png" alt="" loading="eager" decoding="async" />
+            <img class="main-header__logo-image" src="/images/logo.webp" alt="" width="512" height="512" loading="eager" decoding="async" fetchpriority="high" />
           </span>
           <span class="min-w-0">
             <span class="block truncate text-sm font-medium text-[#e8edf4]">Stroy Project</span>
@@ -135,6 +149,10 @@ const compactNavLinks = computed(() => props.navLinks.slice(0, 2))
   font-size: 11px;
   font-weight: 600;
   transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.main-header__burger {
+  display: none;
 }
 
 .main-header__burger:hover,
@@ -299,6 +317,10 @@ const compactNavLinks = computed(() => props.navLinks.slice(0, 2))
 }
 
 @media (max-width: 1023px) {
+  .main-header__burger {
+    display: inline-flex;
+  }
+
   .main-header__shell {
     grid-template-columns: auto 1fr;
   }
